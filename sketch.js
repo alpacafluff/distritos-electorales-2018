@@ -1,3 +1,17 @@
+
+/*
+
+The geojson information on the districts used for this map was extracted from a Google MyMaps
+page that I believe was made by members of Wikipolitica Jalisco. It was then converted from .kml to geojson
+
+This sketch was built using an example shown in
+Genevieve Hoffman's Data Art course at the Interactive Telecommunications
+Program at NYU's Tisch School of the Arts
+November 8th, 2017
+
+Repo for this example: https://github.com/veev/DataArtFall2017/tree/master/section-3/turfjs-example
+*/
+
 mapboxgl.accessToken = 'pk.eyJ1IjoicGlsYXJnIiwiYSI6ImNqOXZxaThtNDBkZDIyemw3bDRicHZxbGIifQ.1Nlv0rO5QoTGh1bH_UYr-Q'; //<your access token here>
 // the code won't run without your own token inserted between the single quotes
 
