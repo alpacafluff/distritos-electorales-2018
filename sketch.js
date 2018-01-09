@@ -13,7 +13,9 @@ Repo for this example: https://github.com/veev/DataArtFall2017/tree/master/secti
 */
 
 mapboxgl.accessToken = 'pk.eyJ1IjoicGlsYXJnIiwiYSI6ImNqOXZxaThtNDBkZDIyemw3bDRicHZxbGIifQ.1Nlv0rO5QoTGh1bH_UYr-Q'; //<your access token here>
-// the code won't run without your own token inserted between the single quotes
+
+
+var colors = ['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462','#b3de69','#fccde5','#d9d9d9','#bc80bd'];
 
 var map = new mapboxgl.Map({
     container: 'map',
@@ -27,26 +29,45 @@ map.on('load', function() {
 	// load data with d3 (just my preference, load it another way if you prefer)
 	d3.json('distritos-electorales-gdl.geojson', function(err, data) {
 		if (err) throw err;
-
-		console.log(data);
-
 		// map source (data) needs a name, type and data
-		map.addSource('distritos-electorales-gdl', { type: 'geojson', data: data });
 
-		// map layer needs an id, type, the source and a style
-		map.addLayer({
-			'id': 'distritos-guadalajara',
-			'type': 'fill',
-			'source': 'distritos-electorales-gdl',
-			'paint': {
-				'fill-color': '#BAD8A7',
-				'fill-outline-color': '#fff',
-				'fill-opacity': 0.4
-			}
-		});
+    data.features.forEach((distrito, index) =>{
+      map.addSource(distrito.properties.Name, { type: 'geojson', data: distrito });
+      // map layer needs an id, type, the source and a style
+      console.log(distrito.properties.Name);
+      map.addLayer({
+        'id': distrito.properties.Name,
+        'type': 'fill',
+        'source': distrito.properties.Name,
+        'paint': {
+          'fill-color': colors[Math.floor(Math.random() * colors.length)],
+          'fill-outline-color': '#fff',
+          'fill-opacity': 0.4
+        }
+      });
+
+    })
 
 		// add interactivity to see a popup with info about a district
 		map.on('click', 'distritos-guadalajara', function(e) {
+
+      let popup = new mapboxgl.Popup()
+				.setLngLat(e.lngLat)
+				.setHTML("Perteneces al " + e.features[0].properties.Name)
+				.addTo(map);
+		});
+
+		// map.on('mouseenter', 'distritos-guadalajara', function() {
+		// 	// Change the cursor style as a UI indicator.
+    //     	map.getCanvas().style.cursor = 'pointer';
+		// })
+    //
+		// map.on('mouseleave', 'distritos-guadalajara', function() {
+		// 	// Change the cursor style back as a UI indicator.
+		// 	map.getCanvas().style.cursor = '';
+		// });
+
+map.on('click', 'distritos-guadalajara', function(e) {
 
 			let popup = new mapboxgl.Popup()
 				.setLngLat(e.lngLat)
@@ -63,6 +84,7 @@ map.on('load', function() {
 			// Change the cursor style back as a UI indicator.
 			map.getCanvas().style.cursor = '';
 		});
+
 
 		// add mapbox geocoder to look up an address!
 		let geocoder = new MapboxGeocoder({
@@ -100,7 +122,9 @@ map.on('load', function() {
 						.setLngLat(pt.geometry.coordinates)
 						.setHTML("Perteneces al" + feature.properties.Name)
 						.addTo(map);
-					popups.push(councilInfo);
+            map.setPaintProperty(feature.properties.Name, 'fill-opacity', 1);
+					  popups.push(councilInfo);
+            zoom: 9.09;
 				}
 			})
 		});
